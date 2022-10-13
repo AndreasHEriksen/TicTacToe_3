@@ -181,6 +181,7 @@ public class GameBoard implements IGameModel
                 for (int col = 0; col < board[row].length; col++) {
                     board[row][col] = -1;
                 }
+                playerTurn = 0;
             }
         }
     }
