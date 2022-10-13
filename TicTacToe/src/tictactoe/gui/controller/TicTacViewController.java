@@ -52,6 +52,10 @@ public class TicTacViewController implements Initializable
                 {
                     int winner = game.getWinner();
                     displayWinner(winner);
+                    Button btn = (Button) event.getSource();
+                    String xOrO = player == 0 ? "X" : "O";
+                    btn.setText(xOrO);
+                    btn.setDisable(true);
                 }
                 else
                 {
@@ -113,5 +117,4 @@ public class TicTacViewController implements Initializable
             btn.setDisable(false);
         }
     }
-
 }

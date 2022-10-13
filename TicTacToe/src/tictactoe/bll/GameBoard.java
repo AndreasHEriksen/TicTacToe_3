@@ -21,6 +21,8 @@ public class GameBoard implements IGameModel
      */
     private int playerTurn = 0;
 
+    boolean gameEnded = false;
+
     /**
      * Dette er en konstruktør, som går ind og fortæller at vi skal starte et newGame
      */
@@ -44,11 +46,11 @@ public class GameBoard implements IGameModel
      */
     public boolean play(int col, int row)
     {
-        if (board[row][col] == -1) {
+        if (board[row][col] == -1 && gameEnded == false) {
             board[row][col] = playerTurn;
             checkWinner();
 
-            if (playerTurn == 0)
+            if (playerTurn == 0 && gameEnded == false)
                 playerTurn = 1;
             else
                 playerTurn = 0;
@@ -66,8 +68,10 @@ public class GameBoard implements IGameModel
         boolean boardIsFull = boardIsFull();
         boolean winnerExist = checkForWinner();
 
-        if (boardIsFull || winnerExist)
+        if (winnerExist || boardIsFull){
+            gameEnded = !gameEnded;
             return true;
+        }
         else
             return false;
     }
@@ -180,6 +184,7 @@ public class GameBoard implements IGameModel
             for (int row = 0; row < board.length; row++) {
                 for (int col = 0; col < board[row].length; col++) {
                     board[row][col] = -1;
+                    gameEnded = false;
                 }
                 playerTurn = 0;
             }
