@@ -46,6 +46,7 @@ public class GameBoard implements IGameModel
     {
         if (board[row][col] == -1) {
             board[row][col] = playerTurn;
+            checkWinner();
 
             if (playerTurn == 0)
                 playerTurn = 1;
@@ -62,32 +63,26 @@ public class GameBoard implements IGameModel
 
     public boolean isGameOver()
     {
-        //boolean boardIsFull = boardIsFull();
+        boolean boardIsFull = boardIsFull();
         boolean winnerExist = checkForWinner();
 
-        if (winnerExist)
+        if (boardIsFull || winnerExist)
             return true;
         else
             return false;
     }
-    private boolean checkTie()
-    {
-        int counter =9;
-        for (int r = 0; r < 3; r++)
-        {
-            for (int c = 0; c < 3; c++)
-            {
-                if(board[r][c] != -1)
-                {
-                    counter--;
+
+    private boolean boardIsFull() {
+
+        // Kigger om boardet er fuld
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                if (board[row][col] == -1) { // If we find one empty spot, it's not full
+                    return false;
                 }
             }
         }
-        if (counter == 0)
-        {
-            return true;
-        }
-        return  false;
+        return true;
     }
 
     private boolean checkForWinner() {
@@ -126,28 +121,64 @@ public class GameBoard implements IGameModel
         return false;
     }
 
-
-
-
-        /**
-         * Gets the id of the winner, -1 if its a draw.
-         *
-         * @return int id of winner, or -1 if draw.
-         */
-        public int getWinner() {
-            if (checkForWinner())
-                return winnerId;
-            else return -1;
+        private boolean checkCells(int c1, int c2, int c3) {
+        return ((c1!=-1) && (c2==c1) && (c3==c1));
         }
+
+        private  boolean checkRow(){
+            for(int r=0; r < 3; r++){
+                if (checkCells(board[r][0],board[r][1],board[r][2])){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private boolean checkCol(){
+        for(int c=0; c < 3; c++){
+            if (checkCells(board[0][c],board[1][c],board[2][c])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkDiagonals(){
+        if (checkCells(board[0][0],board[1][1],board[2][2])){
+            return true;
+        }
+        else if (checkCells(board[0][2],board[1][1],board[2][0])){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+        private boolean checkWinner(){
+            if (checkRow() == true || checkCol() == true || checkDiagonals() == true){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
+    public int getWinner()
+    {
+        if (checkForWinner())
+            return winnerId;
+        else return -1;
+    }
 
         /**
          * Resets the game to a new game state.
          */
-        public void newGame() {
-            playerTurn = 0;
+        public void newGame()
+        {
             //Den kigger efter hvor mange rows og cols vi har. går ind og fortæller at felterne skal være -1.
             for (int row = 0; row < board.length; row++) {
-                for (int col = 0; col < board.length; col++) {
+                for (int col = 0; col < board[row].length; col++) {
                     board[row][col] = -1;
                 }
             }
